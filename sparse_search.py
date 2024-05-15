@@ -1,24 +1,36 @@
 def sparse_search(query, input):
     high = len(input)-1
     low = 0
-    going_up = False
-
-    while low <= high:
+    mids = []
+    while low <= high and len(mids)<20:
         mid = int((low+high)/2)
+        mids.append(mid)
         if input[mid] == query:
             return mid
-        if len(input[mid]) != 0:
+        elif input[mid] == '':
+            searching = True
+            while searching:
+                difTop = 1
+                difBot = 1
+                if input[mid-difBot] == '':
+                    if mid-difBot > 0:
+                        difBot = difBot+1
+                else:
+                    mid = mid-difBot
+                    searching = False
+                if input[mid+difTop] == '':
+                    if mid+difTop < len(input)-1:
+                            difTop = difTop+1
+                else:
+                    mid = mid+difTop
+                    searching = False
             if input[mid] < query:
                 low = mid + 1
-                going_up = True
-            elif input[mid] > query:
+            if input[mid] > query:
                 high = mid -1
-                going_up = False
-            else:
-                return mid
-        else:
-            if going_up:
-                low = low+1
-            if not going_up:
-                high = high-1
-    return -1
+        
+        if input[mid] < query:
+            low = mid + 1
+        if input[mid] > query:
+            high = mid -1
+    return mids
